@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Das Kompliment - Interaktive Geschichte</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #212325;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .story-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            margin: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .story-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #495057;
+            padding-bottom: 20px;
+        }
+
+        .story-title {
+            color: #212529;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .story-subtitle {
+            color: #6c757d;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .story-content {
+            min-height: 200px;
+            margin-bottom: 30px;
+        }
+
+        .story-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #212529;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .lesson {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #6c757d;
+            font-style: italic;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .lesson::before {
+            content: "Lektion: ";
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .choices {
+            margin-top: 30px;
+        }
+
+        .choice-button {
+            display: block;
+            width: 100%;
+            background: #495057;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .choice-button:hover {
+            background: #343a40;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .choice-button:active {
+            transform: translateY(0);
+        }
+
+        .back-button {
+            background: #6c757d;
+            margin-top: 20px;
+        }
+
+        .back-button:hover {
+            background: #5a6268;
+        }
+
+        .restart-button {
+            background: #28a745;
+            margin-top: 20px;
+        }
+
+        .restart-button:hover {
+            background: #218838;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .story-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .story-title {
+                font-size: 2em;
+            }
+            
+            .story-text {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="story-container">
+        <div class="story-header">
+            <h1 class="story-title">Das Kompliment</h1>
+            <p class="story-subtitle">Eine interaktive Geschichte über Selbstzweifel und Anerkennung</p>
+        </div>
+        
+        <div class="story-content fade-in" id="story-content">
+            <!-- Content wird hier dynamisch eingefügt -->
+        </div>
+    </div>
+
+    <script>
+        class InteractiveStory {
+            constructor() {
+                this.currentSection = 'Start';
+                this.contentElement = document.getElementById('story-content');
+                this.init();
+            }
+
+            init() {
+                this.showSection(this.currentSection);
+            }
+
+            showSection(sectionName) {
+                this.currentSection = sectionName;
+                this.contentElement.className = 'story-content fade-in';
+                
+                const section = this.getSection(sectionName);
+                this.contentElement.innerHTML = section;
+            }
+
+            getSection(sectionName) {
+                const sections = {
+                    'Start': `
+                        <div class="story-text">
+                            Du liegst abends im Bett und erinnerst dich an deinen gestrigen Tag. Aufeinmal erinnerst du dich an eine Situation: Jemand komplett Fremdes hat zu dir gesagt: „Du siehst heute gut aus."
+                        </div>
+                        <div class="story-text">
+                            Du kannst dich nicht erinnern wie du reagiert hast und spielst das Szenario im Kopf durch basierend auf dem was du über dich weißt. Wie hättest du am ehesten reagiert?
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button" onclick="story.showSection('EchtesKomplimentJa')">
+                                Du nimmst das Kompliment direkt an
+                            </button>
+                            <button class="choice-button" onclick="story.showSection('EchtesKomplimentNein')">
+                                Du reagierst mit einem unsicheren „Danke" gehst aber schnell weiter
+                            </button>
+                            <button class="choice-button" onclick="story.showSection('EchtesKomplimentNein')">
+                                Du ignorierst das Kompliment und gehst weiter - Bestimmt warst du gar nicht gemeint
+                            </button>
+                        </div>
+                    `,
+                    
+                    'EchtesKomplimentNein': `
+                        <div class="story-text">
+                            Sicher kennst du das und fragst dich in solchen Situationen: War das wirklich ehrlich? Vielleicht haben sie es nur gesagt, um nett zu sein. Oder war es doch ein echtes Kompliment?
+                        </div>
+                        <div class="lesson">
+                            Aber am Ende… es spielt keine Rolle. Ein Kompliment bleibt ein Kompliment, auch wenn du es nicht ganz verstehst. Manchmal ist es okay, einfach zu akzeptieren, was dir gesagt wird, ohne alles zu hinterfragen. Man muss nicht aus allem immer direkt eine Wissenschaft machen.
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button" onclick="story.showSection('Selbstzweifel')">
+                                Weiter
+                            </button>
+                        </div>
+                    `,
+                    
+                    'EchtesKomplimentJa': `
+                        <div class="story-text">
+                            Bist du dir sicher, dass das wirklich ein Kompliment war und nicht einfach nur ein leerer Satz um nicht stillschweigend an dir vorbei zu laufen?
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button" onclick="story.showSection('EchtesKomplimentJa2')">
+                                Ja, das war echt
+                            </button>
+                            <button class="choice-button" onclick="story.showSection('EchtesKomplimentNein')">
+                                Nein
+                            </button>
+                        </div>
+                    `,
+                    
+                    'EchtesKomplimentJa2': `
+                        <div class="lesson">
+                            Du kannst einfache Komplimente annehmen ohne direkt eine Wissenschaft draus zu machen und in allem immer etwas schlechtes zu sehen. Das ist gut!
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button" onclick="story.showSection('Selbstzweifel')">
+                                Weiter
+                            </button>
+                        </div>
+                    `,
+                    
+                    'Selbstzweifel': `
+                        <div class="story-text">
+                            Du kannst einfach nicht einschlafen und drehst dich um und aufeinmal erinnerst du dich an den Moment wo du dir letztens ein neues Auto gekauft hast.
+                        </div>
+                        <div class="story-text">
+                            Dein Arbeitskollege beglückwünscht dich: „Wow was ein tolles Auto! Nach all dem was du dafür getan hast ist das mehr als verdient!"
+                        </div>
+                        <div class="story-text">
+                            Aber dann erinnerst du dich wie du wirklich zu dem Auto gekommen bist. In der Situation warst du glücklich, aber jetzt denkst du dir „Habe ich das wirklich verdient"? Im Studium habe ich eigentlich alles nur von ChatGPT schreiben lassen und halt Glück gehabt dass es keiner gemerkt hat. Auf der Arbeit sitze ich eigentlich auch nur da und schreibe alles aus dem Internet ab. Eigentlich kann ich selber gar nichts und hab einfach immer nur Glück gehabt.
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button" onclick="story.showSection('SelbstzweifelJa')">
+                                Du gehst diesen Gedanken weiter nach, weil es ja wirklich so ist
+                            </button>
+                            <button class="choice-button" onclick="story.showSection('SelbstzweifelNein')">
+                                Nein, das ist Blödsinn und vor allem jetzt mein Auto
+                            </button>
+                        </div>
+                    `,
+                    
+                    'SelbstzweifelJa': `
+                        <div class="lesson">
+                            Es ist leicht, sich von Selbstzweifeln und dem Gefühl des „Hinterherhinkens" erdrücken zu lassen, besonders wenn du das Gefühl hast, nicht wirklich etwas aus eigener Kraft erreicht zu haben. Doch auch wenn du das Gefühl hast, nicht immer den direkten Weg gegangen zu sein, hast du dennoch Erfahrungen und Ergebnisse gesammelt, die dich hierhergebracht haben. Der Erfolg ist nicht immer nur das Resultat harter Arbeit – manchmal ist es auch der Mut, durch Fehler und Umwege zu lernen. Gönn dir ruhig den Erfolg, auch wenn der Weg dorthin nicht immer gerade war.
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button restart-button" onclick="story.showSection('Start')">
+                                🔄 Geschichte neu starten
+                            </button>
+                        </div>
+                    `,
+                    
+                    'SelbstzweifelNein': `
+                        <div class="lesson">
+                            Es ist wichtig, sich von den eigenen Zweifeln zu befreien und die Erfolge anzuerkennen, die man wirklich erreicht hat. Perfektion ist nicht das Ziel – das, was zählt, ist, dass du immer weitergemacht hast. Du kannst stolz auf das sein, was du erreicht hast, auch wenn der Weg nicht immer einfach war. Dein Erfolg ist kein Zufall, sondern das Ergebnis deiner Entscheidungen, auch wenn sie nicht immer die einfachsten waren. Erinnere dich daran, dass du immer noch hier bist, und das ist etwas, worauf du stolz sein kannst.
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button restart-button" onclick="story.showSection('Start')">
+                                🔄 Geschichte neu starten
+                            </button>
+                        </div>
+                    `
+                };
+                
+                return sections[sectionName] || sections['Start'];
+            }
+        }
+
+        // Initialisiere die Geschichte
+        const story = new InteractiveStory();
+    </script>
+</body>
+</html>

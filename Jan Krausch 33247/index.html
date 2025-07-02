@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kognitive Dissonanz</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f7f7;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        section {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .content {
+            max-width: 800px;
+            padding: 2rem;
+            text-align: center;
+            z-index: 2;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            opacity: 0;
+            transform: translateY(30px);
+            color: #333;
+            font-weight: 700;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            color: #555;
+        }
+        
+        .scale-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            opacity: 0.15;
+        }
+        
+        .scale {
+            width: 300px;
+            height: 300px;
+            position: relative;
+        }
+        
+        .balance-beam {
+            width: 250px;
+            height: 10px;
+            background-color: #333;
+            position: absolute;
+            top: 100px;
+            left: 25px;
+            transform-origin: center;
+            border-radius: 5px;
+        }
+        
+        .stand {
+            width: 10px;
+            height: 150px;
+            background-color: #333;
+            position: absolute;
+            bottom: 40px;
+            left: 145px;
+            border-radius: 5px;
+        }
+        
+        .base {
+            width: 150px;
+            height: 20px;
+            background-color: #333;
+            position: absolute;
+            bottom: 20px;
+            left: 75px;
+            border-radius: 5px;
+        }
+        
+        .pan-left, .pan-right {
+            width: 60px;
+            height: 10px;
+            background-color: #333;
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .pan-left {
+            top: 150px;
+            left: 45px;
+        }
+        
+        .pan-right {
+            top: 150px;
+            left: 195px;
+        }
+        
+        .weight-left, .weight-right {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: absolute;
+        }
+        
+        .weight-left {
+            background-color: #e74c3c;
+            top: 170px;
+            left: 55px;
+        }
+        
+        .weight-right {
+            background-color: #3498db;
+            top: 170px;
+            left: 205px;
+        }
+        
+        .scroll-arrow {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            opacity: 0;
+        }
+        
+        .arrow {
+            width: 20px;
+            height: 20px;
+            border-right: 3px solid #555;
+            border-bottom: 3px solid #555;
+            transform: rotate(45deg);
+            margin: 0 auto;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+            
+            .scale {
+                transform: scale(0.8);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            color: #2c3e50;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .info-section {
+            min-height: 100vh;
+            padding: 80px 20px;
+            position: relative;
+        }
+
+        .info-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .info-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .info-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #2c3e50;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .brain-container {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+        }
+
+        .brain {
+            position: relative;
+            width: 160px;
+            height: 120px;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .brain-part {
+            position: absolute;
+            width: 70px;
+            height: 90px;
+            border-radius: 35px 35px 25px 25px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .left-brain {
+            left: 0;
+        }
+
+        .right-brain {
+            right: 0;
+            background: linear-gradient(145deg, #4ecdc4, #44a08d);
+        }
+
+        .conflict-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 3px;
+            height: 60px;
+            background: linear-gradient(to bottom, #667eea, #4ecdc4);
+            transform: translateX(-50%) translateY(-50%);
+            border-radius: 2px;
+            opacity: 0;
+            transform: translateX(-50%) translateY(-50%) scaleY(0);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(40px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .info-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .info-card p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #546e7a;
+        }
+
+        .theory-section {
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .theory-title {
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            color: #2c3e50;
+            opacity: 0;
+            transform: translateY(30px);
+            font-weight: 600;
+        }
+
+        .theory-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+
+        .theory-element {
+            position: relative;
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: scale(0.7);
+            transition: all 0.8s ease;
+        }
+
+        .theory-element:hover {
+            transform: scale(1.05);
+        }
+
+        .theory-element.belief {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .theory-element.behavior {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        }
+
+        /* Container-Form Animation */
+        .theory-element.morphed {
+            border-radius: 12px;
+            width: 300px;
+            height: 80px;
+            font-size: 1.2rem;
+        }
+
+        .conflict-arrows {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .arrow-clash {
+            width: 40px;
+            height: 3px;
+            background: #2c3e50;
+            position: relative;
+            border-radius: 2px;
+        }
+
+        .arrow-clash::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            right: -2px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #2c3e50;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .arrow-clash:last-child::before {
+            right: auto;
+            left: -2px;
+            border-left: none;
+            border-right: 8px solid #2c3e50;
+        }
+
+        .theory-text {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+            background: rgba(255, 255, 255, 0.95);
+            color: #2c3e50;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            opacity: 0;
+            transform: translateY(25px);
+        }
+
+        .festinger-explanation {
+            margin-top: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .explanation-subtitle {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            font-weight: 600;
+        }
+        
+        .explanation-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .exp-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            opacity: 0;
+            transform: translateY(25px);
+            transition: all 0.3s ease;
+        }
+        
+        .exp-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+        
+        .exp-number {
+            min-width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .exp-content h5 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .exp-content p {
+            color: #546e7a;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+        
+        .famous-experiment {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            opacity: 0;
+            transform: translateY(25px);
+            transition: transform 0.3s ease;
+        }
+        
+        .famous-experiment:hover {
+            transform: translateY(-3px);
+        }
+        
+        .experiment-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+        }
+        
+        .experiment-text {
+            flex: 1;
+            color: #2c3e50;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .info-title {
+                font-size: 2.2rem;
+            }
+            
+            .theory-visual {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .conflict-arrows {
+                transform: rotate(90deg) scale(0.8);
+            }
+            
+            .info-card {
+                padding: 25px;
+            }
+            
+            .theory-element {
+                width: 100px;
+                height: 100px;
+                font-size: 0.9rem;
+            }
+
+            .explanation-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .famous-experiment {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .explanation-subtitle {
+                font-size: 1.5rem;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+        iframe {
+            border: none; /* Keine Rahmen um die Frames */
+            width: 100%;
+            height: 100vh; /* Füllt den gesamten Viewport aus */
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="content">
+            <h1>Kognitive Dissonanz: Ein Phänomen, das wir alle erleben</h1>
+            <p>Warum fühlen wir uns manchmal innerlich zerrissen? Diese Reise zeigt dir, wie Überzeugungen und Handlungen in Konflikt geraten – und wie wir damit umgehen können.</p>
+        </div>
+        
+        <div class="scale-container">
+            <div class="scale">
+                <div class="balance-beam"></div>
+                <div class="stand"></div>
+                <div class="base"></div>
+                <div class="pan-left"></div>
+                <div class="pan-right"></div>
+                <div class="weight-left"></div>
+                <div class="weight-right"></div>
+            </div>
+        </div>
+        
+        <div class="scroll-arrow">
+            <div class="arrow"></div>
+        </div>
+    </section>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <section class="info-section">
+        <div class="info-container">
+            <div class="info-header">
+                <h2 class="info-title">Was ist Kognitive Dissonanz?</h2>
+                <div class="brain-container">
+                    <div class="brain">
+                        <div class="brain-part left-brain"></div>
+                        <div class="brain-part right-brain"></div>
+                        <div class="conflict-line"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-card definition">
+                    <div class="card-icon">🧠</div>
+                    <h3>Definition</h3>
+                    <p>Kognitive Dissonanz entsteht, wenn unsere Überzeugungen, Einstellungen oder Verhaltensweisen miteinander in Konflikt stehen.</p>
+                </div>
+                
+                <div class="info-card symptoms">
+                    <div class="card-icon">⚡</div>
+                    <h3>Symptome</h3>
+                    <p>Unbehagen, Rechtfertigungen, Rationalisierungen und das Gefühl innerer Spannung sind typische Anzeichen kognitiver Dissonanz.</p>
+                </div>
+                
+                <div class="info-card causes">
+                    <div class="card-icon">🔗</div>
+                    <h3>Entstehung</h3>
+                    <p>Dissonanz entsteht bei Widersprüchen zwischen Werten und Handeln, neuen Informationen oder schwierigen Entscheidungen.</p>
+                </div>
+            </div>
+            
+            <div class="theory-section">
+                <h3 class="theory-title">Leon Festingers Theorie (1957)</h3>
+                <div class="theory-visual">
+                    <div class="theory-element belief">
+                        <span>Überzeugung</span>
+                    </div>
+                    <div class="conflict-arrows">
+                        <div class="arrow-clash"></div>
+                        <div class="arrow-clash"></div>
+                    </div>
+                    <div class="theory-element behavior">
+                        <span>Verhalten</span>
+                    </div>
+                </div>
+                <p class="theory-text">Menschen streben nach Konsistenz in ihrem Denken und Handeln. Widersprüche erzeugen psychischen Stress, den wir durch verschiedene Mechanismen zu reduzieren versuchen.</p>
+                
+                <div class="festinger-explanation">
+                    <h4 class="explanation-subtitle">Die Kernaussagen der Theorie</h4>
+                    <div class="explanation-cards">
+                        <div class="exp-card">
+                            <div class="exp-number">1</div>
+                            <div class="exp-content">
+                                <h5>Dissonanz ist unangenehm</h5>
+                                <p>Der innere Konflikt erzeugt psychologischen Stress und Unbehagen.</p>
+                            </div>
+                        </div>
+                        <div class="exp-card">
+                            <div class="exp-number">2</div>
+                            <div class="exp-content">
+                                <h5>Motivation zur Reduktion</h5>
+                                <p>Je stärker die Dissonanz, desto größer der Drang, sie zu beseitigen.</p>
+                            </div>
+                        </div>
+                        <div class="exp-card">
+                            <div class="exp-number">3</div>
+                            <div class="exp-content">
+                                <h5>Drei Wege zur Auflösung</h5>
+                                <p>Verhalten ändern, Überzeugung anpassen oder einen Mittelweg finden</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="famous-experiment">
+                        <div class="experiment-icon">💡</div>
+                        <div class="experiment-text">
+                            <strong>Ein Beispiel:</strong> Du bist bemüht, die Umwelt zu schützen und eigentlich strikt gegen den Einsatz von Einweggeschirr. Freitag ist aber Currywurst-Tag, welche wiederum nur in einer Plastikschale serviert wird. <strong>Hier entsteht kognitive Dissonanz - </strong> Der Konflikt zwischen deinen Umweltüberzeugungen und dem Wunsch nach der geliebten Currywurst.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    <div>
+       
+        <iframe src="demo.html"></iframe>
+        <iframe src="morphen.html"></iframe>
+        <iframe src="chatbot.html"></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Register ScrollTrigger plugin
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Initial animations
+            const tl = gsap.timeline();
+            
+            tl.to('.scale-container', {
+                opacity: 0.15,
+                duration: 1.5,
+                ease: 'power2.inOut'
+            })
+            .to('h1', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: 'power2.out'
+            }, '-=0.5')
+            .to('p', {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: 'power2.out'
+            }, '-=0.7')
+            .to('.scroll-arrow', {
+                opacity: 1,
+                duration: 1
+            }, '-=0.5');
+            
+            // Balance beam animation on scroll
+            gsap.to('.balance-beam', {
+                rotationZ: 15,
+                scrollTrigger: {
+                    trigger: 'section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true,
+                }
+            });
+            
+            // Pan and weight animations that follow the beam
+            gsap.to('.pan-left', {
+                y: -25,
+                scrollTrigger: {
+                    trigger: 'section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true,
+                }
+            });
+            
+            gsap.to('.weight-left', {
+                y: -25,
+                scrollTrigger: {
+                    trigger: 'section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true,
+                }
+            });
+            
+            gsap.to('.pan-right', {
+                y: 25,
+                scrollTrigger: {
+                    trigger: 'section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true,
+                }
+            });
+            
+            gsap.to('.weight-right', {
+                y: 25,
+                scrollTrigger: {
+                    trigger: 'section',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true,
+                }
+            });
+        });
+
+
+
+
+
+
+         gsap.registerPlugin(ScrollTrigger);
+
+        // Sanftere Animationen ohne übertriebene Effekte
+        gsap.to('.info-title', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.info-title',
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        gsap.to('.brain', {
+            opacity: 1,
+            scale: 1,
+            duration: 1.2,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.brain',
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        gsap.to('.conflict-line', {
+            opacity: 1,
+            scaleY: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.conflict-line',
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        // Staggered card animations
+        gsap.utils.toArray('.info-card').forEach((card, index) => {
+            gsap.to(card, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: index * 0.1,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+        });
+
+        gsap.to('.theory-title', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.theory-title',
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        gsap.utils.toArray('.theory-element').forEach((element, index) => {
+            gsap.to(element, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                delay: index * 0.2,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: element,
+                    start: 'top 75%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+        });
+
+        // Container-Morphing Animation bei weiterem Scrollen
+        gsap.to('.theory-element', {
+            borderRadius: '12px',
+            width: '300px',
+            height: '80px',
+            fontSize: '1.2rem',
+            duration: 1.5,
+            ease: 'power3.inOut',
+            scrollTrigger: {
+                trigger: '.theory-text',
+                start: 'top 60%',
+                end: 'bottom 40%',
+                toggleActions: 'play none none reverse',
+                onEnter: () => {
+                    // Zusätzliche Klasse für erweiterte Styling-Kontrolle
+                    document.querySelectorAll('.theory-element').forEach(el => {
+                        el.classList.add('morphed');
+                    });
+                },
+                onLeave: () => {
+                    document.querySelectorAll('.theory-element').forEach(el => {
+                        el.classList.remove('morphed');
+                    });
+                },
+                onEnterBack: () => {
+                    document.querySelectorAll('.theory-element').forEach(el => {
+                        el.classList.add('morphed');
+                    });
+                },
+                onLeaveBack: () => {
+                    document.querySelectorAll('.theory-element').forEach(el => {
+                        el.classList.remove('morphed');
+                    });
+                }
+            }
+        });
+
+        gsap.to('.conflict-arrows', {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.conflict-arrows',
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        gsap.to('.theory-text', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.theory-text',
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+        
+        gsap.to('.festinger-explanation', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.festinger-explanation',
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+        
+        gsap.to('.explanation-subtitle', {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.explanation-subtitle',
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+        
+        gsap.utils.toArray('.exp-card').forEach((card, index) => {
+            gsap.to(card, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                delay: index * 0.1,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+        });
+        
+        gsap.to('.famous-experiment', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.famous-experiment',
+                start: 'top 75%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+    </script>
+</body>
+</html>

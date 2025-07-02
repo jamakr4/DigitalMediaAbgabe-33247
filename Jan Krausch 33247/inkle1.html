@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Das neue Auto - Interaktive Geschichte</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #212325;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .story-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            margin: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .story-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #495057;
+            padding-bottom: 20px;
+        }
+
+        .story-title {
+            color: #212529;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .story-subtitle {
+            color: #6c757d;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .story-content {
+            min-height: 200px;
+            margin-bottom: 30px;
+        }
+
+        .story-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #212529;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .lesson {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #6c757d;
+            font-style: italic;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .lesson::before {
+            content: "Lektion: ";
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .choices {
+            margin-top: 30px;
+        }
+
+        .choice-button {
+            display: block;
+            width: 100%;
+            background: #495057;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .choice-button:hover {
+            background: #343a40;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .choice-button:active {
+            transform: translateY(0);
+        }
+
+        .back-button {
+            background: #6c757d;
+            margin-top: 20px;
+        }
+
+        .back-button:hover {
+            background: #5a6268;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .car-emoji {
+            font-size: 2em;
+            margin: 0 10px;
+        }
+
+        @media (max-width: 600px) {
+            .story-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .story-title {
+                font-size: 2em;
+            }
+            
+            .story-text {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="story-container">
+        <div class="story-header">
+            <h1 class="story-title">Das neue Auto</h1>
+            <p class="story-subtitle">Eine interaktive Geschichte über Zweifel und Selbstvertrauen</p>
+        </div>
+        
+        <div class="story-content fade-in" id="story-content">
+            <!-- Content wird hier dynamisch eingefügt -->
+        </div>
+    </div>
+
+    <script>
+        class InteractiveStory {
+            constructor() {
+                this.currentSection = 'Start';
+                this.contentElement = document.getElementById('story-content');
+                this.init();
+            }
+
+            init() {
+                this.showSection(this.currentSection);
+            }
+
+            showSection(sectionName) {
+                this.currentSection = sectionName;
+                this.contentElement.className = 'story-content fade-in';
+                
+                const section = this.getSection(sectionName);
+                this.contentElement.innerHTML = section;
+            }
+
+            getSection(sectionName) {
+                const sections = {
+                    'Start': `
+                        <div class="story-text">
+                            Du kaufst dir dein neues Traumauto und fährst Nachhause. Dein Arbeitskollege gratuliert dir mehrere Wochen später! Den ganzen Tag bist du überglücklich und kannst es eigentlich gar nicht wirklich glauben. Eines Abends liegst du dann im Bett und kannst nicht schlafen und denkst allgemein darüber nach, wie du hier zu diesem Punkt gekommen bist.
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button" onclick="story.showSection('Zweifel')">
+                                Hab ich das Auto überhaupt verdient oder einfach nur Glück gehabt?
+                            </button>
+                            <button class="choice-button" onclick="story.showSection('Verdient')">
+                                Das ist jetzt mein Auto und ich habe das verdient
+                            </button>
+                            <button class="choice-button" onclick="story.showSection('Zeitpunkt')">
+                                Warum gratuliert mir mein Kollege eigentlich ausgerechnet jetzt?
+                            </button>
+                            <button class="choice-button" onclick="story.showSection('Echt')">
+                                War das überhaupt ein Kompliment?
+                            </button>
+                            <button class="choice-button" onclick="story.showSection('Weltbild')">
+                                Eigentlich ist das Auto gar nicht so schön, also warum hat er mir überhaupt ein Kompliment gemacht?
+                            </button>
+                        </div>
+                    `,
+                    
+                    'Zweifel': `
+                        <div class="story-text">
+                            Du erinnerst dich an die vielen Male, als du im Studium Arbeiten einfach von ChatGPT hast schreiben lassen. In der Arbeit ziehst du oft Lösungen aus dem Internet, ohne viel eigenes Wissen einzubringen. Es fühlt sich an, als hättest du nie wirklich etwas alleine geschafft – du hast immer nur Glück gehabt.
+                        </div>
+                        <div class="story-text">
+                            Trotz des glänzenden BMWs fragst du dich, ob du wirklich stolz auf das Auto sein kannst oder ob es nur ein Symptom für deinen eigenen Mangel an echten Leistungen ist.
+                        </div>
+                        <div class="lesson">
+                            An sich selber zu zweifeln ist normal, aber lass dich davon nicht unterkriegen. Auch wenn es sich manchmal nicht so anfühlt, aber du darfst es dir auch erlauben, dich für deine Errungenschaften gut zu fühlen.
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button back-button" onclick="story.showSection('Start')">
+                                Aber vielleicht willst du ja noch einem anderen Gedanken nachgehen
+                            </button>
+                        </div>
+                    `,
+                    
+                    'Verdient': `
+                        <div class="story-text">
+                            Du schüttelst den Gedanken ab. „Nein, das ist Blödsinn", sagst du dir. Du hast dir das Auto nicht nur „erschlichen" – es steht für all das, was du tatsächlich erreicht hast. Vielleicht waren es Umwege und nicht immer der direkte, harte Weg, aber du hast es geschafft. Dein Erfolg ist nicht nur das Ergebnis eines Glücks, sondern auch das Resultat deiner Entscheidungen.
+                        </div>
+                        <div class="lesson">
+                            Nicht drüber nachdenken und Komplimente einfach mal Komplimente sein lassen ist genau die richtige Einstellung!
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button back-button" onclick="story.showSection('Start')">
+                                🔄 Aber vielleicht willst du ja noch einem anderen Gedanken nachgehen
+                            </button>
+                        </div>
+                    `,
+                    
+                    'Zeitpunkt': `
+                        <div class="story-text">
+                            Du denkst dir: Warum eigentlich ausgerechnet jetzt? Das Auto hatte ich schon ein paar Wochen und mein Kollege hat mich damit auch schon mehrfach gesehen, schließlich parkt ihr beide in der Tiefgarage immer direkt nebeneinander. Hat er das nur aus irgendeinem anderen Grund gesagt?
+                        </div>
+                        <div class="lesson">
+                            Das Timing bei Komplimenten ist oft entscheidend, wie dieses rüberkommt und wirkt. Wenn du jemand anderem ein Kompliment machen willst, solltest du darüber nachdenken, dies direkt zu tun, um Zweifel dieser Art zu vermeiden.
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button back-button" onclick="story.showSection('Start')">
+                                🔄 Aber vielleicht willst du ja noch einem anderen Gedanken nachgehen
+                            </button>
+                        </div>
+                    `,
+                    
+                    'Echt': `
+                        <div class="story-text">
+                            Du fragst dich: War das überhaupt ein echtes Kompliment? Oder wollte er einfach nur nicht stillschweigend an mir vorbei gehen? Nichts ist schließlich unangenehmer als stillschweigend einfach so vorbei zu gehen. Vielleicht hat er das auch nur gesagt, weil er sich verpflichtet gefühlt hat und in Wirklichkeit mag er das Auto gar nicht und hält mich für total abgehoben.
+                        </div>
+                        <div class="lesson">
+                            Denk nicht so viel drüber nach. Nicht hinter allem steckt automatisch immer eine Absicht. Vielleicht findet dein Kollege dein Auto toll, weil es das wirklich ist.
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button back-button" onclick="story.showSection('Start')">
+                                🔄 Aber vielleicht willst du ja noch einem anderen Gedanken nachgehen
+                            </button>
+                        </div>
+                    `,
+                    
+                    'Weltbild': `
+                        <div class="story-text">
+                            Bei weiterem Nachdenken überlegst du dir, ob das Auto wirklich so toll ist wie dir dein Kollege gesagt hat. Schließlich ist es nur ein Gebrauchtwagen und eine Felge hat einen Kratzer. Auch wolltest du ursprünglich weiße Sitze, hast dich dann aber doch wegen des guten Angebots für schwarze entschieden. Zweifel über Zweifel.
+                        </div>
+                        <div class="lesson">
+                            Manchmal wehrt der Kopf Komplimente ab, weil sie nicht ins eigene Weltbild passen. Er redet sich selber ein, dass man ihn nicht verletzen kann, wenn man Erwartungen gering hält und alles klein redet.
+                        </div>
+                        <div class="choices">
+                            <button class="choice-button back-button" onclick="story.showSection('Start')">
+                                🔄 Aber vielleicht willst du ja noch einem anderen Gedanken nachgehen
+                            </button>
+                        </div>
+                    `
+                };
+                
+                return sections[sectionName] || sections['Start'];
+            }
+        }
+
+        // Initialisiere die Geschichte
+        const story = new InteractiveStory();
+    </script>
+</body>
+</html>

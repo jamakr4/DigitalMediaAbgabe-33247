@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kognitive Dissonanz - Morphing Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2c3e50;
+        }
+        
+        .demo-header {
+            position: absolute;
+            top: 40px;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
+        }
+        
+        .demo-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-subtitle {
+            font-size: 1rem;
+            color: #546e7a;
+            opacity: 0.8;
+        }
+        
+        .stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 800px;
+            height: 200px;
+            position: absolute;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-align: center;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            left: 50%;
+            transform: translateX(-50%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+        }
+        
+        #container1 {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            top: 25%;
+            z-index: 10;
+        }
+        
+        #container1::after {
+            content: "Überzeugung: Gegen Einwegplastik sein";
+        }
+        
+        #container2 {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            bottom: 25%;
+            z-index: 10;
+        }
+        
+        #container2::after {
+            content: "Verhalten: Currywurst trotzdem in Einwegplastik kaufen";
+        }
+        
+        #mergedContainer {
+            background: linear-gradient(135deg, #667eea, #4ecdc4, #764ba2, #44a08d);
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease-in-out infinite;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            height: 0;
+            opacity: 0;
+            z-index: 20;
+        }
+        
+        #mergedContainer::after {
+            content: "Lösung: Einen Mittelweg finden - Bring doch einfach deine eigene Schale mit!";
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .color-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 15;
+        }
+        
+        .color-stream {
+            position: absolute;
+            width: 4px;
+            height: 100px;
+            opacity: 0;
+            z-index: 12;
+            border-radius: 2px;
+        }
+        
+        .blend-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.3), rgba(76, 201, 196, 0.3), transparent);
+            opacity: 0;
+            z-index: 5;
+        }
+        
+        .control-panel {
+            position: absolute;
+            bottom: 40px;
+            width: 100%;
+            text-align: center;
+            z-index: 1000;
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        button:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
+        }
+        
+        .reset-button {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d) !important;
+            box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3) !important;
+        }
+        
+        .reset-button:hover {
+            background: linear-gradient(135deg, #7f8c8d, #6c7b7d) !important;
+            box-shadow: 0 6px 18px rgba(149, 165, 166, 0.4) !important;
+        }
+        
+        .explanation-box {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+            color: #2c3e50;
+            max-width: 500px;
+            text-align: center;
+            opacity: 0;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-title {
+                font-size: 1.8rem;
+            }
+            
+            .container {
+                width: 85%;
+                height: 150px;
+                font-size: 1.4rem;
+            }
+            
+            .control-panel {
+                bottom: 20px;
+            }
+            
+            button {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+            
+            .explanation-box {
+                bottom: 80px;
+                max-width: 300px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h2 class="demo-title">Dissonanz-Auflösung</h2>
+        <p class="demo-subtitle">Sieh zu, wie sich Konflikte in Balance verwandeln!</p>
+    </div>
+    
+    <div class="stage" id="stage">
+        <div class="container" id="container1"></div>
+        <div class="container" id="container2"></div>
+        <div class="container" id="mergedContainer"></div>
+        <div class="blend-overlay"></div>
+    </div>
+    
+    <div class="explanation-box" id="explanationBox">
+        Die Farben verschmelzen zu einer neuen Balance - Es geht im Alltag darum einen Mittelweg zufinden und nicht nur Schwarz und Weiß zu denken.
+    </div>
+    
+    <div class="control-panel">
+        <button id="startButton">Auflösung erleben</button>
+        <button id="resetButton" class="reset-button">Zurücksetzen</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container1 = document.getElementById('container1');
+            const container2 = document.getElementById('container2');
+            const mergedContainer = document.getElementById('mergedContainer');
+            const startButton = document.getElementById('startButton');
+            const resetButton = document.getElementById('resetButton');
+            const blendOverlay = document.querySelector('.blend-overlay');
+            const explanationBox = document.getElementById('explanationBox');
+            
+            // Farbpartikel erstellen
+            function createColorParticles() {
+                const particleCount = 40;
+                const particles = [];
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'color-particle';
+                    
+                    // Alternierende Farben der beiden Container
+                    if (i % 2 === 0) {
+                        particle.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                    } else {
+                        particle.style.background = 'linear-gradient(135deg, #4ecdc4, #44a08d)';
+                    }
+                    
+                    particle.style.boxShadow = i % 2 === 0 ? 
+                        '0 0 15px rgba(102, 126, 234, 0.6)' : 
+                        '0 0 15px rgba(76, 201, 196, 0.6)';
+                    
+                    document.body.appendChild(particle);
+                    particles.push(particle);
+                }
+                
+                // Farbströme erstellen
+                for (let i = 0; i < 20; i++) {
+                    const stream = document.createElement('div');
+                    stream.className = 'color-stream';
+                    
+                    if (i % 2 === 0) {
+                        stream.style.background = 'linear-gradient(to bottom, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8), transparent)';
+                    } else {
+                        stream.style.background = 'linear-gradient(to bottom, rgba(76, 201, 196, 0.8), rgba(68, 160, 141, 0.8), transparent)';
+                    }
+                    
+                    document.body.appendChild(stream);
+                    particles.push(stream);
+                }
+                
+                return particles;
+            }
+            
+            const allEffects = createColorParticles();
+            
+            // Position zurücksetzen
+            function resetPositions() {
+                gsap.killTweensOf("*");
+                gsap.set([container1, container2], { 
+                    opacity: 0, 
+                    scale: 1, 
+                    rotation: 0,
+                    x: 0,
+                    y: 0
+                });
+                gsap.set(mergedContainer, { 
+                    opacity: 0, 
+                    height: 0, 
+                    scale: 1, 
+                    rotation: 0 
+                });
+                gsap.set(allEffects, { opacity: 0, scale: 0 });
+                gsap.set(blendOverlay, { opacity: 0, scale: 0 });
+                gsap.set(explanationBox, { opacity: 0, y: 20 });
+                
+                // Positionen zurücksetzen
+                container1.style.top = '25%';
+                container2.style.bottom = '25%';
+                
+                // Alte Partikel entfernen
+                document.querySelectorAll('.color-particle, .color-stream').forEach(el => el.remove());
+                
+                startButton.textContent = 'Auflösung erleben';
+                startButton.disabled = false;
+            }
+            
+            // Color-Blending Animation
+            function startColorMorphing() {
+                startButton.disabled = true;
+                startButton.textContent = 'Auflösung läuft...';
+                
+                // Neue Partikel erstellen
+                const newEffects = createColorParticles();
+                
+                const tl = gsap.timeline();
+                
+                // Container erscheinen
+                tl.to([container1, container2], {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1,
+                    ease: "power2.out",
+                    stagger: 0.3
+                });
+                
+                // Leichtes Pulsieren vor der Verschmelzung
+                tl.to([container1, container2], {
+                    scale: 1.05,
+                    duration: 0.5,
+                    repeat: 3,
+                    yoyo: true,
+                    ease: "power2.inOut"
+                }, "+=0.5");
+                
+                // Blend-Overlay erscheint
+                tl.to(blendOverlay, {
+                    opacity: 1,
+                    scale: 3,
+                    duration: 2,
+                    ease: "power2.out"
+                }, "-=1");
+                
+                // Farbpartikel starten von den Containern
+                tl.call(() => {
+                    const particles = document.querySelectorAll('.color-particle');
+                    const streams = document.querySelectorAll('.color-stream');
+                    
+                    // Container-Positionen für Partikel-Start
+                    const rect1 = container1.getBoundingClientRect();
+                    const rect2 = container2.getBoundingClientRect();
+                    const centerX = window.innerWidth / 2;
+                    const centerY = window.innerHeight / 2;
+                    
+                    particles.forEach((particle, i) => {
+                        const startX = i % 2 === 0 ? rect1.left + rect1.width/2 : rect2.left + rect2.width/2;
+                        const startY = i % 2 === 0 ? rect1.top + rect1.height/2 : rect2.top + rect2.height/2;
+                        
+                        gsap.set(particle, {
+                            x: startX,
+                            y: startY,
+                            scale: 0
+                        });
+                        
+                        gsap.to(particle, {
+                            opacity: 1,
+                            scale: gsap.utils.random(0.5, 1.5),
+                            x: centerX + gsap.utils.random(-100, 100),
+                            y: centerY + gsap.utils.random(-100, 100),
+                            duration: gsap.utils.random(1, 2),
+                            ease: "power2.out",
+                            delay: i * 0.05
+                        });
+                    });
+                    
+                    // Farbströme animieren
+                    streams.forEach((stream, i) => {
+                        const startX = i % 2 === 0 ? rect1.left + gsap.utils.random(0, rect1.width) : rect2.left + gsap.utils.random(0, rect2.width);
+                        const startY = i % 2 === 0 ? rect1.top + rect1.height/2 : rect2.top + rect2.height/2;
+                        
+                        gsap.set(stream, {
+                            x: startX,
+                            y: startY,
+                            rotation: gsap.utils.random(0, 360)
+                        });
+                        
+                        gsap.to(stream, {
+                            opacity: 0.8,
+                            x: centerX + gsap.utils.random(-50, 50),
+                            y: centerY + gsap.utils.random(-50, 50),
+                            duration: gsap.utils.random(1.5, 2.5),
+                            ease: "power2.inOut",
+                            delay: i * 0.1
+                        });
+                    });
+                }, "-=1.5");
+                
+                // Container bewegen sich zur Mitte mit Farbübergang
+                tl.to(container1, {
+                    top: "45%",
+                    scale: 0.8,
+                    duration: 2,
+                    ease: "power2.inOut"
+                }, "convergence");
+                
+                tl.to(container2, {
+                    bottom: "45%",
+                    scale: 0.8,
+                    duration: 2,
+                    ease: "power2.inOut"
+                }, "convergence");
+                
+                // Farben vermischen sich
+                tl.to(container1, {
+                    filter: "hue-rotate(30deg) brightness(1.2)",
+                    duration: 1.5,
+                    ease: "power2.inOut"
+                }, "convergence+=0.5");
+                
+                tl.to(container2, {
+                    filter: "hue-rotate(-30deg) brightness(1.2)",
+                    duration: 1.5,
+                    ease: "power2.inOut"
+                }, "convergence+=0.5");
+                
+                // Partikel konvergieren und verschwinden
+                tl.to('.color-particle, .color-stream', {
+                    x: window.innerWidth / 2,
+                    y: window.innerHeight / 2,
+                    scale: 0,
+                    opacity: 0,
+                    duration: 1.5,
+                    ease: "power3.in",
+                    stagger: 0.02
+                }, "convergence+=1");
+                
+                // Original Container verschwinden sanft
+                tl.to([container1, container2], {
+                    opacity: 0,
+                    scale: 0.5,
+                    duration: 1,
+                    ease: "power2.in"
+                }, "convergence+=2");
+                
+                // Verschmolzener Container erscheint mit Farbverlauf
+                tl.fromTo(mergedContainer, 
+                    { 
+                        opacity: 0, 
+                        height: 0, 
+                        scale: 0
+                    },
+                    {
+                        opacity: 1,
+                        height: 200,
+                        scale: 1,
+                        duration: 2,
+                        ease: "elastic.out(1, 0.6)"
+                    }, "convergence+=2.5"
+                );
+                
+                // Blend-Overlay ausblenden
+                tl.to(blendOverlay, {
+                    opacity: 0,
+                    scale: 5,
+                    duration: 1.5,
+                    ease: "power2.out"
+                }, "-=1");
+                
+                // Erklärung einblenden
+                tl.to(explanationBox, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                }, "-=0.5");
+                
+                // Button wieder aktivieren
+                tl.add(() => {
+                    startButton.disabled = false;
+                    startButton.textContent = 'Erneut erleben';
+                });
+            }
+            
+            // Initialisieren
+            resetPositions();
+            
+            // Event-Listener
+            startButton.addEventListener('click', startColorMorphing);
+            resetButton.addEventListener('click', resetPositions);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Projekt</title>
+  <style>
+    /* Allgemeines Reset und Box-Sizing */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Hintergrund und Schrift */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #ffffff;
+      color: #2c3e50;
+      line-height: 1.6;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Header mit dezenter Überschrift */
+    .chat-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .chat-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+
+    .chat-subtitle {
+      font-size: 1.1rem;
+      color: #546e7a;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    /* Container für die Story */
+    #story {
+      background: rgba(255, 255, 255, 0.95);
+      width: 100%;
+      max-width: 700px;
+      padding: 2rem;
+      border-radius: 15px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      margin-bottom: 2rem;
+      min-height: 180px;
+      position: relative;
+    }
+
+    /* Sanfter Hover-Effekt */
+    #story:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+
+    /* Absätze innerhalb der Story */
+    #story p {
+      margin-bottom: 1.2rem;
+      color: #2c3e50;
+      font-size: 1rem;
+      text-align: left;
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+    }
+
+    #story p:hover {
+      opacity: 1;
+    }
+
+    /* Eingabebereich */
+    #userInputArea {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      max-width: 700px;
+      position: relative;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    /* Textfeld */
+    #userInput {
+      flex: 1;
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.9);
+      color: #2c3e50;
+      transition: all 0.3s ease;
+      margin-right: 0.8rem;
+    }
+
+    #userInput:focus {
+      border: 1px solid #667eea;
+      background: rgba(255, 255, 255, 1);
+      transform: scale(1.01);
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+    }
+
+    #userInput::placeholder {
+      color: #a0a0a0;
+      font-style: italic;
+    }
+
+    /* Senden-Button */
+    #userInputArea button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    #userInputArea button:hover {
+      background: linear-gradient(135deg, #5a67d8, #6b46c1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
+    }
+
+    #userInputArea button:active {
+      transform: translateY(0);
+    }
+
+    /* AI-Indikator */
+    .ai-indicator {
+      display: inline-flex;
+      align-items: center;
+      color: #667eea;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      opacity: 0.7;
+      font-weight: 500;
+    }
+
+    .ai-indicator::before {
+      content: '';
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(102, 126, 234, 0.3);
+      border-radius: 50%;
+      border-top-color: #667eea;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive Anpassungen */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+      
+      .chat-title {
+        font-size: 2.2rem;
+      }
+      
+      .chat-subtitle {
+        font-size: 1rem;
+      }
+      
+      #story {
+        padding: 1.5rem;
+        max-width: 100%;
+      }
+      
+      #userInputArea {
+        flex-direction: column;
+        gap: 0.8rem;
+        max-width: 100%;
+      }
+      
+      #userInput {
+        margin-right: 0;
+        font-size: 1rem;
+      }
+      
+      #userInputArea button {
+        font-size: 1rem;
+        padding: 0.8rem 1.2rem;
+      }
+    }
+
+    /* Scroll-Animationen */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Highlight-Effekt für neue Nachrichten */
+    .new-message {
+      animation: highlight 0.6s ease;
+    }
+
+    @keyframes highlight {
+      0% { background-color: rgba(102, 126, 234, 0.05); }
+      100% { background-color: transparent; }
+    }
+
+    /* Chat-Nachrichten Styling */
+    .message-user {
+      background: rgba(102, 126, 234, 0.1);
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+      border-left: 3px solid #667eea;
+    }
+
+    .message-ai {
+      background: rgba(76, 201, 196, 0.1);
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+      border-left: 3px solid #4ecdc4;
+    }
+
+    .message-label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    .message-user .message-label {
+      color: #667eea;
+    }
+
+    .message-ai .message-label {
+      color: #4ecdc4;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-header fade-in">
+    <h1 class="chat-title">Noch Fragen?</h1>
+    <p class="chat-subtitle">Frag unseren KI-Assistenten</p>
+  </div>
+
+  <div id="story" class="fade-in">
+    <div class="ai-indicator">KI-Assistent bereit</div>
+    <p>Hallo! Ich bin hier, um deine Fragen zur Kognitiven Dissonanz zu beantworten. Stell mir gerne alles, was dich interessiert!</p>
+  </div>
+
+  <div id="userInputArea" class="fade-in">
+    <input type="text" id="userInput" placeholder="Stell deine Frage hier...">
+    <button onclick="handleUserInput()">
+      Senden
+      <span id="loadingSpinner" class="loading" style="display: none;"></span>
+    </button>
+  </div>
+  
+  <script src="main.js"></script>
+  
+  <script>
+    // Enhanced user experience
+    document.getElementById('userInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        handleUserInput();
+      }
+    });
+
+
+
+    // Placeholder für handleUserInput falls main.js nicht verfügbar
+    if (typeof handleUserInput === 'undefined') {
+      function handleUserInput() {
+        const input = document.getElementById('userInput');
+        const story = document.getElementById('story');
+        const spinner = document.getElementById('loadingSpinner');
+        
+        if (!input.value.trim()) return;
+        
+        // Nutzer-Nachricht hinzufügen
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message-user';
+        userMessage.innerHTML = `
+          <div class="message-label">Du</div>
+          <div>${input.value}</div>
+        `;
+        story.appendChild(userMessage);
+        
+        // Loading Animation
+        spinner.style.display = 'inline-block';
+        const userQuestion = input.value;
+        input.value = '';
+        
+        setTimeout(() => {
+          const aiMessage = document.createElement('div');
+          aiMessage.className = 'message-ai new-message';
+          
+          // Einfache Antworten basierend auf Schlüsselwörtern
+          let response = "Das ist eine interessante Frage zur Kognitiven Dissonanz! ";
+          
+          if (userQuestion.toLowerCase().includes('beispiel')) {
+            response += "Ein klassisches Beispiel ist der Raucher, der weiß, dass Rauchen schädlich ist, aber trotzdem raucht. Diese Dissonanz kann er durch Rechtfertigungen auflösen wie 'Ich rauche nur wenig' oder 'Das Leben ist eh unsicher'.";
+          } else if (userQuestion.toLowerCase().includes('festinger')) {
+            response += "Leon Festinger entwickelte 1957 die Theorie der Kognitiven Dissonanz. Er erkannte, dass Menschen nach Konsistenz in ihren Gedanken streben und Widersprüche als unangenehm empfinden.";
+          } else if (userQuestion.toLowerCase().includes('auflösung') || userQuestion.toLowerCase().includes('lösen')) {
+            response += "Dissonanz kann auf drei Wegen aufgelöst werden: 1) Verhalten ändern, 2) Einstellung ändern, oder 3) neue Informationen hinzufügen, die den Widerspruch relativieren.";
+          } else {
+            response += "Die Kognitive Dissonanz-Theorie erklärt, wie wir mit widersprüchlichen Gedanken und Handlungen umgehen. Welcher Aspekt interessiert dich besonders?";
+          }
+          
+          aiMessage.innerHTML = `
+            <div class="message-label">AI-Assistent</div>
+            <div>${response}</div>
+          `;
+          
+          story.appendChild(aiMessage);
+          spinner.style.display = 'none';
+          
+          // Scroll to new message
+          aiMessage.scrollIntoView({ behavior: 'smooth' });
+        }, 1200);
+      }
+    }
+
+    // Smooth fade-in animations
+    document.addEventListener('DOMContentLoaded', function() {
+      const elements = document.querySelectorAll('.fade-in');
+      elements.forEach((el, index) => {
+        el.style.animationDelay = `${index * 0.2}s`;
+      });
+    });
+  </script>
+</body>
+</html>
